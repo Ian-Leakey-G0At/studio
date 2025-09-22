@@ -1,3 +1,47 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "A person confidently looking at their financial future.",
+      "imageUrl": "https://picsum.photos/seed/hero1/800/800",
+      "imageHint": "person future"
+    },
+    {
+      "id": "course-1",
+      "description": "Image for Debt Elimination course.",
+      "imageUrl": "https://picsum.photos/seed/course1/600/400",
+      "imageHint": "finance planning"
+    },
+    {
+      "id": "course-2",
+      "description": "Image for Investment Basics course.",
+      "imageUrl": "https://picsum.photos/seed/course2/600/400",
+      "imageHint": "stock market"
+    },
+    {
+      "id": "course-3",
+      "description": "Image for Budgeting for Variable Income course.",
+      "imageUrl": "https://picsum.photos/seed/course3/600/400",
+      "imageHint": "money management"
+    },
+    {
+      "id": "course-4",
+      "description": "Image for Building an Emergency Fund course.",
+      "imageUrl": "https://picsum.photos/seed/course4/600/400",
+      "imageHint": "savings piggybank"
+    },
+    {
+      "id": "course-5",
+      "description": "Image for Understanding Credit course.",
+      "imageUrl": "https://picsum.photos/seed/course5/600/400",
+      "imageHint": "credit card"
+    },
+    {
+      "id": "course-6",
+      "description": "Image for Tax Implications for Freelancers course.",
+      "imageUrl": "https://picsum.photos/seed/course6/600/400",
+      "imageHint": "tax forms"
+    }
+  ]
 }
