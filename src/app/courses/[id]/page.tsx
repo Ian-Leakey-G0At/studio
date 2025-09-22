@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { courses } from "@/lib/data";
-import { placeholderImages } from "@/lib/placeholder-images";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, BarChart, Film, FileText } from "lucide-react";
@@ -20,7 +20,7 @@ export default function CoursePage({ params }: CoursePageProps) {
     notFound();
   }
 
-  const image = placeholderImages.find(img => img.id === course.imageId);
+  const image = PlaceHolderImages.find(img => img.id === course.imageId);
 
   return (
     <div className="bg-secondary">

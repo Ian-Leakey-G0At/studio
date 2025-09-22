@@ -4,11 +4,11 @@ import { courses } from "@/lib/data";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { placeholderImages } from "@/lib/placeholder-images";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function Home() {
   const featuredCourses = courses.slice(0, 3);
-  const heroImage = placeholderImages.find(img => img.id === "hero-1");
+  const heroImage = PlaceHolderImages.find(img => img.id === "hero-1");
 
   return (
     <div className="flex flex-col">

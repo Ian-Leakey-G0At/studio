@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Course } from "@/lib/types";
-import { placeholderImages } from "@/lib/placeholder-images";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 
@@ -12,7 +12,7 @@ type CourseCardProps = {
 };
 
 export function CourseCard({ course }: CourseCardProps) {
-  const image = placeholderImages.find(img => img.id === course.imageId);
+  const image = PlaceHolderImages.find(img => img.id === course.imageId);
 
   return (
     <Card className="flex flex-col overflow-hidden h-full transition-transform transform hover:-translate-y-2 hover:shadow-xl">
