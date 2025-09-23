@@ -22,7 +22,7 @@ export default function RootLayout({
         className={`font-body antialiased`}
       >
         <AuthProvider>
-          <div className="flex min-h-screen flex-col overflow-hidden">
+          <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
