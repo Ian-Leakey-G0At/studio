@@ -18,7 +18,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full p-4">
-      <div className="container mx-auto flex items-center justify-between gap-2">
+      <div className="container mx-auto flex items-center justify-between gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="lg" className="rounded-2xl interactive-glow px-6">
@@ -32,6 +32,11 @@ export function Header() {
             <DropdownMenuItem asChild>
               <Link href="/about">About</Link>
             </DropdownMenuItem>
+            { user && (
+                <DropdownMenuItem asChild>
+                    <Link href="/account">My Account</Link>
+                </DropdownMenuItem>
+            )}
             {!user && !loading && (
               <>
                 <DropdownMenuItem asChild>

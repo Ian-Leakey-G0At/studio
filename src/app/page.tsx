@@ -30,12 +30,6 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 md:px-6 py-8">
       <div className="flex flex-1 flex-col gap-8">
-        <section className="w-full grid grid-cols-2 gap-4 md:gap-6">
-            {featuredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-        </section>
-
         <section className="w-full">
           <Carousel
             plugins={[
@@ -51,18 +45,18 @@ export default function Home() {
             }}
           >
             <CarouselContent>
-              {courses.slice(0, 3).map((course) => (
+              {courses.slice(0, 3).map((course, index) => (
                 <CarouselItem key={course.id}>
                   <div className="p-1">
                     <div className="glass-container flex aspect-[16/9] md:aspect-[21/9] w-full items-center justify-center p-6 rounded-3xl">
-                      <div className="text-center text-white z-10 space-y-4 max-w-3xl mx-auto">
+                      <div className="text-center z-10 space-y-4 max-w-3xl mx-auto">
                         <motion.h1 
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2, duration: 0.5 }}
                           className="text-2xl md:text-4xl lg:text-5xl font-black uppercase text-foreground"
                         >
-                          {course.title}
+                          INTERACTIVE SWIPEABLE CAROUSEL
                         </motion.h1>
                         <motion.p 
                            initial={{ opacity: 0, y: 20 }}
@@ -70,7 +64,7 @@ export default function Home() {
                           transition={{ delay: 0.3, duration: 0.5 }}
                           className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground"
                         >
-                            {course.description}
+                            THIS WILL CONTAIN OUR BEST SELLING CONTENT/COURSES
                         </motion.p>
                       </div>
                     </div>
@@ -79,6 +73,21 @@ export default function Home() {
               ))}
             </CarouselContent>
           </Carousel>
+        </section>
+
+        <section className="grid grid-cols-2 gap-4">
+            <Button asChild variant="secondary">
+                <Link href="/courses">All Courses</Link>
+            </Button>
+            <Button variant="secondary" onClick={handleGoodLuck}>
+                Tap for Good Luck
+            </Button>
+        </section>
+
+        <section className="w-full grid grid-cols-2 gap-4 md:gap-6">
+            {featuredCourses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
         </section>
       </div>
     </div>

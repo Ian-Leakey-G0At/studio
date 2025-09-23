@@ -19,6 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ['Satoshi', ...fontFamily.sans],
         body: ['Satoshi', ...fontFamily.sans],
         headline: ['Satoshi', ...fontFamily.sans],
       },
