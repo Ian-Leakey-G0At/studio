@@ -37,7 +37,8 @@ export default function Home() {
     }
     
     const updateProgress = () => {
-      setProgress(autoplay());
+      // @ts-expect-error - scrollProgress is not in the type definition
+      setProgress(autoplay.scrollProgress());
       requestAnimationFrame(updateProgress);
     };
     requestAnimationFrame(updateProgress);
