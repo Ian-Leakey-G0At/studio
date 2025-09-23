@@ -16,7 +16,16 @@ export function CourseCard({ course }: CourseCardProps) {
   const image = PlaceHolderImages.find(img => img.id === course.imageId);
   
   const durationValue = course.duration.split(' ')[0];
-  const durationUnit = course.duration.split(' ')[1].substring(0,3).toUpperCase();
+  const durationUnitRaw = course.duration.split(' ')[1];
+  let durationUnit = 'HRS';
+  if (durationUnitRaw.toLowerCase().startsWith('hour')) {
+    durationUnit = 'HRS';
+  } else if (durationUnitRaw.toLowerCase().startsWith('min')) {
+    durationUnit = 'MIN';
+  } else {
+    durationUnit = durationUnitRaw.substring(0,3).toUpperCase();
+  }
+
 
   return (
     <motion.div
@@ -54,7 +63,7 @@ export function CourseCard({ course }: CourseCardProps) {
                     {durationValue}
                   </span>
                   <span className="text-xs font-bold tracking-widest">
-                    {course.format === 'Video' ? 'HRS' : durationUnit}
+                    {durationUnit}
                   </span>
                 </div>
                 {/* Details */}
