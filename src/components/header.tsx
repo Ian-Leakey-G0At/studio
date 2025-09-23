@@ -22,7 +22,7 @@ export function Header() {
       <div className="container flex items-center justify-between gap-4 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="lg" className="rounded-xl interactive-glow flex-1">
+            <Button variant="secondary" size="lg" className="rounded-xl interactive-glow flex-[1]">
               MORE
             </Button>
           </DropdownMenuTrigger>
@@ -57,7 +57,7 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Link href="/" className="flex-1">
+        <Link href="/" className="flex-[5]">
           <div className="w-full text-center p-4 rounded-xl glass-container interactive-glow">
             <span className="text-sm font-bold tracking-widest uppercase">
               Revenge Money & Logo
