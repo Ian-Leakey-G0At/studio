@@ -27,7 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import type { UserProfile } from "@/lib/types";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -37,7 +38,7 @@ const loginSchema = z.object({
 });
 
 const signupSchema = z.object({
-  displayName: z.string().min(2, { message: "Name is too short." }),
+  displayName: z.string().min(2, { message: "Name is too short." }).max(50, { message: "Name is too long." }),
   email: z.string().email({ message: "Invalid email address." }),
   password: z
     .string()
@@ -67,12 +68,28 @@ export function AuthForm({ mode }: AuthFormProps) {
         : { email: "", password: "" },
   });
 
+  const getOrCreateUserProfile = async (user: any) => {
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      const newUserProfile: UserProfile = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        purchasedCourses: [],
+      };
+      await setDoc(userRef, { ...newUserProfile, createdAt: serverTimestamp() });
+    }
+  }
+
   const updatePurchasedCourses = async (userId: string) => {
     if (courseId) {
       const userRef = doc(db, "users", userId);
       await updateDoc(userRef, {
         purchasedCourses: arrayUnion(courseId),
-      });
+      }, { merge: true });
     }
   };
 
@@ -89,6 +106,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           password
         );
         await updateProfile(userCredential.user, { displayName });
+        await getOrCreateUserProfile(userCredential.user);
         user = userCredential.user;
       } else {
         const { email, password } = data as z.infer<typeof loginSchema>;
@@ -98,14 +116,10 @@ export function AuthForm({ mode }: AuthFormProps) {
       
       await updatePurchasedCourses(user.uid);
       
-      if (courseId) {
-        router.push(`/learn/${courseId}`);
-      } else {
-        router.push(redirectTo);
-      }
+      router.push(courseId ? `/learn/${courseId}` : redirectTo);
 
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message.replace('Firebase: ', '').replace(`(${e.code})`, ''));
     } finally {
       setIsLoading(false);
     }
@@ -117,16 +131,13 @@ export function AuthForm({ mode }: AuthFormProps) {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+      await getOrCreateUserProfile(result.user);
       await updatePurchasedCourses(result.user.uid);
       
-      if (courseId) {
-        router.push(`/learn/${courseId}`);
-      } else {
-        router.push(redirectTo);
-      }
+      router.push(courseId ? `/learn/${courseId}` : redirectTo);
 
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message.replace('Firebase: ', '').replace(`(${e.code})`, ''));
     } finally {
       setIsLoading(false);
     }
@@ -191,7 +202,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           </Button>
         </form>
       </Form>
-      <Separator className="my-6" />
+      <Separator className="my-6 bg-border" />
       <Button
         variant="outline"
         className="w-full"
@@ -203,7 +214,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       </Button>
 
       {error && (
-        <Alert variant="destructive" className="mt-6">
+        <Alert variant="destructive" className="mt-6 bg-destructive/20 border-destructive">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Authentication Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
