@@ -84,7 +84,7 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
             Buy Now for ${course.price}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         {!purchaseComplete ? (
             <>
                 <DialogHeader>
@@ -100,7 +100,7 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
                 </p>
                 </div>
                 <DialogFooter>
-                <Button onClick={handlePurchase} disabled={isLoading} className="w-full">
+                <Button onClick={handlePurchase} disabled={isLoading} className="w-full" size="lg">
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     {isLoading ? 'Processing Payment...' : 'Confirm Purchase'}
                 </Button>
@@ -115,7 +115,7 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
                 </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className='!justify-center pt-4'>
-                    <Button onClick={handleLoginRedirect} className="w-full">
+                    <Button onClick={handleLoginRedirect} className="w-full" size="lg">
                         Create Account or Log In
                     </Button>
                 </DialogFooter>

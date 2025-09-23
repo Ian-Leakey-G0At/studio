@@ -6,16 +6,6 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AuthProvider } from '@/hooks/use-auth';
 
-const inter = Inter({ 
-  subsets: ['latin'], 
-  variable: '--font-inter',
-  weights: ['400', '500'],
-});
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-  weights: ['600', '700'],
-});
 
 export const metadata: Metadata = {
   title: 'Revenge Money Academy',
@@ -30,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" style={{ colorScheme: 'dark' }} suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${montserrat.variable} font-body antialiased`}
+        className={`font-body antialiased`}
       >
         <AuthProvider>
-          <div className="flex min-h-screen flex-col bg-gradient-to-r from-[#1A1A1A] to-[#2C1F2F]">
+          <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />

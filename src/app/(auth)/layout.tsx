@@ -12,15 +12,15 @@ export default function AuthLayout({
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Link href="/" className="flex items-center justify-center space-x-2">
             <Coins className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold font-headline">Revenge Money</span>
+            <span className="text-2xl font-black">Revenge Money</span>
         </Link>
-        <h2 className="mt-6 text-center text-2xl font-bold font-headline leading-9 tracking-tight text-foreground">
+        <h2 className="mt-6 text-center text-3xl font-bold leading-9 tracking-tight text-text-primary">
           Welcome to the Academy
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="charcoal-glass-card p-8">
+        <div className="charcoal-card p-8">
             {children}
         </div>
       </div>

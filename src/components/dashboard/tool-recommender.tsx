@@ -27,6 +27,7 @@ import { getRecommendationsAction } from "@/actions/recommendations";
 import { Wand2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { courses } from "@/lib/data";
+import { motion, AnimatePresence } from "framer-motion";
 
 const recommenderSchema = z.object({
   financialGoals: z.string().min(10, {
@@ -56,6 +57,9 @@ export function ToolRecommender() {
     
     const courseHistory = completedCourses?.join(", ") || "No courses completed yet.";
 
+    // Simulate AI "thinking" time
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
     const result = await getRecommendationsAction({
       financialGoals: data.financialGoals,
       courseHistory: courseHistory,
@@ -73,7 +77,7 @@ export function ToolRecommender() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center font-headline">
+        <CardTitle className="flex items-center font-bold text-2xl">
           <Wand2 className="h-6 w-6 mr-3 text-primary" />
           Personalized Tool Recommendations
         </CardTitle>
@@ -89,7 +93,7 @@ export function ToolRecommender() {
               name="financialGoals"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>What are your main financial goals right now?</FormLabel>
+                  <FormLabel className="font-bold">What are your main financial goals right now?</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="e.g., 'I want to pay off my credit card debt faster and start saving for a down payment on a house.'"
@@ -101,30 +105,43 @@ export function ToolRecommender() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} size="lg">
               {isLoading ? "Generating..." : "Get Recommendations"}
             </Button>
           </form>
         </Form>
       </CardContent>
-      {(isLoading || recommendations) && (
-        <CardFooter>
-          <div className="w-full mt-6">
-            <h3 className="font-headline text-lg font-semibold mb-2">Your AI-Powered Suggestions</h3>
-            {isLoading ? (
-              <div className="space-y-2">
-                <div className="h-4 bg-muted rounded w-3/4 animate-pulse"></div>
-                <div className="h-4 bg-muted rounded w-1/2 animate-pulse"></div>
-                <div className="h-4 bg-muted rounded w-5/6 animate-pulse"></div>
-              </div>
-            ) : (
-              <div className="prose prose-sm max-w-none text-foreground/90">
-                <p>{recommendations}</p>
-              </div>
-            )}
-          </div>
-        </CardFooter>
-      )}
+      <AnimatePresence>
+        {(isLoading || recommendations) && (
+          <CardFooter as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="w-full mt-6">
+              <h3 className="font-bold text-xl mb-4">Your AI-Powered Suggestions</h3>
+              {isLoading ? (
+                <div className="space-y-3">
+                  <div className="h-4 bg-muted rounded w-3/4 animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded w-1/2 animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded w-5/6 animate-pulse"></div>
+                </div>
+              ) : (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                  <div className="prose prose-sm max-w-none text-text-secondary prose-p:my-2">
+                    {recommendations?.split('\n').map((rec, i) => (
+                      <motion.p 
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.2 }}
+                      >
+                        {rec}
+                      </motion.p>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </CardFooter>
+        )}
+      </AnimatePresence>
     </Card>
   );
 }

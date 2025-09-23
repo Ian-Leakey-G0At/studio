@@ -213,24 +213,25 @@ export function AuthForm({ mode }: AuthFormProps) {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading} size="lg">
             {isLoading ? "Loading..." : mode === "login" ? "Log In" : "Sign Up"}
           </Button>
         </form>
       </Form>
       <Separator className="my-6 bg-border" />
       <Button
-        variant="outline"
+        variant="secondary"
         className="w-full"
         onClick={handleGoogleSignIn}
         disabled={isLoading}
+        size="lg"
       >
         <GoogleIcon />
         Sign in with Google
       </Button>
 
       {error && (
-        <Alert variant="destructive" className="mt-6 bg-destructive/20 border-destructive">
+        <Alert variant="destructive" className="mt-6">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Authentication Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>

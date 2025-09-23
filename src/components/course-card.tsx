@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -22,6 +21,7 @@ export function CourseCard({ course }: CourseCardProps) {
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
+      className="h-full"
     >
       <Card className="flex flex-col overflow-hidden h-full">
         <CardHeader className="p-0">
@@ -41,22 +41,22 @@ export function CourseCard({ course }: CourseCardProps) {
           </Link>
         </CardHeader>
         <CardContent className="p-6 flex-1">
-          <Badge variant="outline" className="mb-2 border-secondary text-secondary">{course.category}</Badge>
-          <CardTitle className="font-headline text-xl mb-2">
+          <Badge variant="outline" className="mb-2 uppercase">{course.category}</Badge>
+          <CardTitle className="font-bold text-xl mb-2">
             <Link href={`/courses/${course.id}`} className="hover:text-primary transition-colors">
               {course.title}
             </Link>
           </CardTitle>
-          <p className="text-muted-foreground text-sm line-clamp-3">
+          <p className="text-text-secondary text-sm line-clamp-3">
             {course.description}
           </p>
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-between items-center">
-          <div className="flex items-center text-sm text-muted-foreground">
+          <div className="flex items-center text-sm text-text-secondary">
               <Clock className="h-4 w-4 mr-1.5"/>
               {course.duration}
           </div>
-          <Button asChild size="sm" variant="outline">
+          <Button asChild size="sm" variant="secondary">
             <Link href={`/courses/${course.id}`}>View Details</Link>
           </Button>
         </CardFooter>
