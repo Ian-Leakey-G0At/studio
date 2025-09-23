@@ -17,15 +17,20 @@ import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/clientApp";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, LogOut, User as UserIcon } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
 
 export function UserNav() {
   const { user, userProfile } = useAuth();
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await signOut(auth);
-    router.push("/");
+    try {
+        await signOut(auth);
+        // The onAuthStateChanged listener in useAuth will handle clearing the session cookie
+        router.push("/");
+    } catch (error) {
+        console.error("Error signing out:", error);
+    }
   };
 
   if (!user) return null;

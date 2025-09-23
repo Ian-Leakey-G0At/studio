@@ -7,7 +7,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { CourseCard } from "@/components/course-card";
 import { courses } from "@/lib/data";
-import { ArrowRight, PartyPopper } from "lucide-react";
+import { PartyPopper } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";

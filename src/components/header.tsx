@@ -4,18 +4,19 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { Coins, Menu, X } from "lucide-react";
+import { Coins, LogIn, MoreVertical, UserPlus } from "lucide-react";
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import React from "react";
+import { UserNav } from "@/components/auth/user-nav";
 
 export function Header() {
   const { user, loading } = useAuth();
-  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -29,47 +30,39 @@ export function Header() {
           </Link>
         </div>
         
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu />
-              <span className="sr-only">Open menu</span>
+        <nav className="flex items-center space-x-2">
+            <Button variant="ghost" asChild>
+                <Link href="/courses">Courses</Link>
             </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <nav className="flex flex-col items-start space-y-4 p-4">
-                <SheetClose asChild>
-                    <Link href="/courses" className="text-lg font-medium hover:text-primary">Courses</Link>
-                </SheetClose>
-                <SheetClose asChild>
-                    <Link href="/account" className="text-lg font-medium hover:text-primary">My Account</Link>
-                </SheetClose>
-              
-              <div className="pt-4 border-t w-full">
-                {loading ? (
-                  <div className="h-8 w-24 animate-pulse rounded-md bg-muted" />
-                ) : user ? (
-                   <SheetClose asChild>
-                    <Link href="/account" className="text-lg font-medium hover:text-primary">My Account</Link>
-                   </SheetClose>
-                ) : (
-                  <div className="flex flex-col space-y-2">
-                    <SheetClose asChild>
-                        <Button asChild variant="ghost">
-                            <Link href="/login">Log In</Link>
+            {loading ? (
+                 <div className="h-8 w-8 animate-pulse rounded-full bg-muted" />
+            ) : user ? (
+                <UserNav />
+            ) : (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <MoreVertical />
+                            <span className="sr-only">More options</span>
                         </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                        <Button asChild>
-                            <Link href="/signup">Sign Up</Link>
-                        </Button>
-                    </SheetClose>
-                  </div>
-                )}
-              </div>
-            </nav>
-          </SheetContent>
-        </Sheet>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                         <DropdownMenuItem asChild>
+                            <Link href="/login">
+                                <LogIn className="mr-2"/>
+                                Log In
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Link href="/signup">
+                                <UserPlus className="mr-2"/>
+                                Sign Up
+                            </Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )}
+        </nav>
       </div>
     </header>
   );
