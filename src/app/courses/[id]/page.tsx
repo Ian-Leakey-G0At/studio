@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, BarChart, Film, FileText } from "lucide-react";
 import Link from "next/link";
+import { use } from "react";
 
 type CoursePageProps = {
   params: {
@@ -16,7 +17,8 @@ type CoursePageProps = {
   };
 };
 
-export default function CoursePage({ params }: CoursePageProps) {
+export default function CoursePage({ params: paramsProp }: CoursePageProps) {
+  const params = use(paramsProp);
   const { id } = params;
   const course = courses.find((c) => c.id === id);
 

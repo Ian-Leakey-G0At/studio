@@ -5,7 +5,7 @@ import { notFound, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { courses } from "@/lib/data";
 import { VideoPlayer } from "@/components/video-player";
-import { useEffect } from "react";
+import { useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Lock } from "lucide-react";
@@ -16,9 +16,10 @@ type LearnPageProps = {
   };
 };
 
-export default function LearnPage({ params }: LearnPageProps) {
+export default function LearnPage({ params: paramsProp }: LearnPageProps) {
   const { userProfile, loading } = useAuth();
   const router = useRouter();
+  const params = use(paramsProp);
   const { id } = params;
 
   const course = courses.find((c) => c.id === id);
