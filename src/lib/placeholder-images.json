@@ -42,6 +42,12 @@
       "description": "Image for Tax Implications for Freelancers course.",
       "imageUrl": "https://picsum.photos/seed/course6/600/400",
       "imageHint": "tax forms"
+    },
+    {
+      "id": "profile-sophie",
+      "description": "A portrait of Sophie Bennett.",
+      "imageUrl": "https://picsum.photos/seed/sophie/600/800",
+      "imageHint": "woman portrait"
     }
   ]
 }
