@@ -69,16 +69,7 @@ export function Header() {
                 <div className="h-14 w-14 animate-pulse rounded-full bg-muted" />
           ) : user ? (
               <UserNav />
-          ) : (
-            <div className='hidden md:flex items-center gap-2'>
-              <Button variant="ghost" asChild>
-                <Link href="/login">Log In</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
     </header>
