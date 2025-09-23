@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AuthProvider } from '@/hooks/use-auth';
-
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Revenge Money Academy',
@@ -19,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" style={{ colorScheme: 'dark' }} suppressHydrationWarning>
       <body
-        className={`font-body antialiased`}
+        className={cn(
+          'font-body antialiased',
+          'bg-gradient-to-br from-black to-zinc-900'
+        )}
       >
         <AuthProvider>
           <div className="flex min-h-screen flex-col">
