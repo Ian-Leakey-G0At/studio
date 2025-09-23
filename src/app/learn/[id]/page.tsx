@@ -1,3 +1,4 @@
+
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
@@ -18,8 +19,9 @@ type LearnPageProps = {
 export default function LearnPage({ params }: LearnPageProps) {
   const { userProfile, loading } = useAuth();
   const router = useRouter();
+  const { id } = params;
 
-  const course = courses.find((c) => c.id === params.id);
+  const course = courses.find((c) => c.id === id);
 
   // In a real app, this check would be more robust.
   // The middleware protects the route, but we should also check if the *specific* user has purchased *this* course.
@@ -29,9 +31,9 @@ export default function LearnPage({ params }: LearnPageProps) {
 
   useEffect(() => {
     if (!loading && !userProfile) {
-      router.push(`/login?redirect_to=/learn/${params.id}`);
+      router.push(`/login?redirect_to=/learn/${id}`);
     }
-  }, [loading, userProfile, router, params.id]);
+  }, [loading, userProfile, router, id]);
 
   if (!course) {
     notFound();
