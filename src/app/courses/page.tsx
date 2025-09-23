@@ -30,7 +30,14 @@ export default function CoursesPage() {
           </h1>
         </motion.div>
 
-        <section className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <section
+          className="w-full"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.5rem',
+          }}
+        >
           {courses.map((course, index) => (
              <motion.div
               key={course.id}
