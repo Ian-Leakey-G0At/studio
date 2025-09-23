@@ -121,7 +121,7 @@ export default function Home() {
                 <button
                   key={index}
                   onClick={() => api?.scrollTo(index)}
-                  className="w-16 h-1.5 rounded-full overflow-hidden bg-white/10 relative"
+                  className="w-12 h-1.5 rounded-full overflow-hidden bg-white/10 relative"
                 >
                   <motion.div
                     className="absolute top-0 left-0 h-full bg-white"
