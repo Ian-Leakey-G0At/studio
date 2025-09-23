@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -76,10 +77,10 @@ export default function Home() {
         </section>
 
         <section className="grid grid-cols-2 gap-4">
-            <Button asChild variant="secondary">
+            <Button asChild variant="secondary" className="rounded-full">
                 <Link href="/courses">All Courses</Link>
             </Button>
-            <Button variant="secondary" onClick={handleGoodLuck}>
+            <Button variant="secondary" onClick={handleGoodLuck} className="rounded-full">
                 Tap for Good Luck
             </Button>
         </section>
