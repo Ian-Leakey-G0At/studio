@@ -114,9 +114,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         user = userCredential.user;
       }
       
+      const idToken = await user.getIdToken();
+      await fetch('/api/auth/sessionLogin', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
       await updatePurchasedCourses(user.uid);
       
       router.push(courseId ? `/learn/${courseId}` : redirectTo);
+      router.refresh();
+
 
     } catch (e: any) {
       setError(e.message.replace('Firebase: ', '').replace(`(${e.code})`, ''));
@@ -132,9 +140,17 @@ export function AuthForm({ mode }: AuthFormProps) {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       await getOrCreateUserProfile(result.user);
+
+      const idToken = await result.user.getIdToken();
+      await fetch('/api/auth/sessionLogin', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${idToken}` },
+      });
+
       await updatePurchasedCourses(result.user.uid);
       
       router.push(courseId ? `/learn/${courseId}` : redirectTo);
+      router.refresh();
 
     } catch (e: any) {
       setError(e.message.replace('Firebase: ', '').replace(`(${e.code})`, ''));
