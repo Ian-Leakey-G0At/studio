@@ -30,6 +30,12 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 md:px-6 py-8">
       <div className="flex flex-1 flex-col gap-8">
+        <section className="w-full grid grid-cols-2 gap-4 md:gap-6">
+            {featuredCourses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
+        </section>
+
         <section className="w-full">
           <Carousel
             plugins={[
@@ -73,23 +79,6 @@ export default function Home() {
               ))}
             </CarouselContent>
           </Carousel>
-        </section>
-
-        <section className="w-full grid grid-cols-2 gap-4">
-          <Button asChild size="lg" variant="secondary" className="interactive-glow rounded-2xl">
-              <Link href="/courses">All Courses</Link>
-          </Button>
-          <Button size="lg" variant="secondary" onClick={handleGoodLuck} className="interactive-glow rounded-2xl">
-              Tap for Good Luck
-          </Button>
-        </section>
-
-        <section className="w-full">
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
-            {featuredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
         </section>
       </div>
     </div>
