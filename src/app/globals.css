@@ -3,54 +3,66 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   :root {
-    --background: 0 0% 96.1%; /* #F5F5F5 */
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --background: 240 4% 96%; /* Cultured White #F6F6F6 */
+    --foreground: 240 1% 21%; /* Jet Black #353437 */
+    
+    --card: 0 0% 100%; /* Pure White */
+    --card-foreground: 240 1% 21%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 231 48% 48%; /* #3F51B5 */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 92.1%;
-    --secondary-foreground: 240 10% 3.9%;
-    --muted: 0 0% 92.1%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 122 39% 49%; /* #4CAF50 */
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 231 48% 48%;
+    --popover-foreground: 240 1% 21%;
+
+    --primary: 271 33% 49%; /* Royal Purple #7851A9 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 75 100% 50%; /* Electric Lime #AFFF00 */
+    --secondary-foreground: 240 1% 21%;
+
+    --muted: 0 0% 90%; /* Light Gray #E7E7E7 */
+    --muted-foreground: 0 0% 41%; /* Dim Gray #696969 */
+    
+    --accent: 0 0% 96%;
+    --accent-foreground: 240 1% 21%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 271 33% 49%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 231 48% 58%; /* Lighter Indigo */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 122 39% 59%; /* Lighter Green */
-    --accent-foreground: 240 10% 3.9%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 231 48% 58%;
+    --background: 210 13% 10%; /* Eerie Black to Dark Purple Gradient handled in layout */
+    --foreground: 0 0% 96%; /* Soft White #F5F5F5 */
+
+    --card: 204 15% 22%; /* Charcoal #36454F - Used as base for glass */
+    --card-foreground: 0 0% 96%;
+
+    --popover: 204 15% 15%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 75 100% 50%; /* Electric Lime #AFFF00 */
+    --primary-foreground: 210 13% 10%;
+    
+    --secondary: 271 33% 49%; /* Royal Purple #7851A9 */
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 210 9% 31%;
+    --muted-foreground: 0 0% 41%; /* Dim Gray #696969 */
+
+    --accent: 210 9% 21%;
+    --accent-foreground: 0 0% 96%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 96%;
+
+    --border: 0 0% 100% / 0.1; /* Frosted White rgba(255, 255, 255, 0.1) */
+    --input: 0 0% 100% / 0.1;
+    --ring: 75 100% 50%;
   }
 }
 
@@ -60,5 +72,17 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    background-color: transparent; /* Allow gradient from layout to show */
+  }
+}
+
+@layer components {
+  .charcoal-glass-card {
+    background: rgba(54, 69, 79, 0.25); /* Charcoal with 25% opacity */
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2), -4px -4px 12px rgba(90, 90, 90, 0.1);
+    border-radius: 16px;
   }
 }

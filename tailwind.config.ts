@@ -13,7 +13,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['var(--font-inter)', ...fontFamily.sans],
-        headline: ['var(--font-space-grotesk)', ...fontFamily.sans],
+        headline: ['var(--font-montserrat)', ...fontFamily.sans],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -58,9 +58,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: '16px',
+        md: '12px',
+        sm: '8px',
       },
       keyframes: {
         'accordion-down': {

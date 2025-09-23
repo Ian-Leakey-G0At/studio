@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
+import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { CourseCard } from "@/components/course-card";
@@ -30,12 +31,13 @@ export default function Home() {
     toast({
       title: "🎉 Good Luck! 🎉",
       description: "May your finances flourish and your investments prosper!",
+      variant: 'default',
     });
   };
 
   return (
     <div className="flex flex-col">
-      <section className="w-full py-12 md:py-20 lg:py-28 bg-card">
+      <section className="w-full py-12 md:py-20 lg:py-28">
         <div className="container mx-auto px-4 md:px-6">
           <Carousel
             plugins={[
@@ -57,43 +59,57 @@ export default function Home() {
                 return (
                   <CarouselItem key={course.id}>
                     <div className="p-1">
-                      <Card>
-                        <CardContent className="relative aspect-video flex items-center justify-center p-6">
-                           {image && (
-                            <Image
-                              src={image.imageUrl}
-                              alt={course.title}
-                              fill
-                              className="object-cover rounded-lg"
-                              data-ai-hint={image.imageHint}
-                            />
-                          )}
-                          <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
-                          <div className="relative text-center text-primary-foreground z-10 space-y-4">
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold">
-                              {course.title}
-                            </h2>
-                            <p className="max-w-2xl mx-auto text-lg md:text-xl">
-                                {course.description}
-                            </p>
+                      <div className="relative aspect-video flex items-center justify-center p-6 charcoal-glass-card">
+                         {image && (
+                          <Image
+                            src={image.imageUrl}
+                            alt={course.title}
+                            fill
+                            className="object-cover rounded-lg"
+                            data-ai-hint={image.imageHint}
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/60 rounded-lg"></div>
+                        <div className="relative text-center text-white z-10 space-y-4">
+                          <motion.h2 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold"
+                          >
+                            {course.title}
+                          </motion.h2>
+                          <motion.p 
+                             initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                            className="max-w-2xl mx-auto text-lg md:text-xl text-foreground/80"
+                          >
+                              {course.description}
+                          </motion.p>
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4, duration: 0.5 }}
+                          >
                             <Button asChild>
                                 <Link href={`/courses/${course.id}`}>Learn More</Link>
                             </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          </motion.div>
+                        </div>
+                      </div>
                     </div>
                   </CarouselItem>
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-primary" />
           </Carousel>
         </div>
       </section>
 
-      <section className="w-full py-12 md:py-16 bg-background">
+      <section className="w-full py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6 flex justify-center items-center gap-4">
             <Button asChild size="lg">
                 <Link href="/courses">All Courses</Link>
@@ -105,7 +121,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
+      <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container mx-auto px-4 md:px-6">
           <div className="space-y-4 text-center mb-12">
             <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">

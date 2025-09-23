@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8 bg-secondary">
+    <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Link href="/" className="flex items-center justify-center space-x-2">
             <Coins className="h-8 w-8 text-primary" />
@@ -19,7 +19,7 @@ export default function AuthLayout({
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="bg-card p-8 shadow-lg rounded-lg">
+        <div className="charcoal-glass-card p-8">
             {children}
         </div>
       </div>
