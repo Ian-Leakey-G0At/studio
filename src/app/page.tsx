@@ -67,8 +67,8 @@ export default function Home() {
   const currentCourse = carouselCourses[current];
 
   return (
-    <div className="container mx-auto px-4 md:px-6 py-8">
-      <div className="flex flex-1 flex-col gap-8">
+    <div className="container mx-auto px-4 md:px-6 py-4">
+      <div className="flex flex-1 flex-col gap-4">
         <section className="w-full">
           <Carousel
             setApi={setApi}
@@ -143,7 +143,7 @@ export default function Home() {
             </Button>
         </section>
 
-        <section className="w-full grid grid-cols-2 gap-4 md:gap-6">
+        <section className="w-full grid grid-cols-2 gap-4 md:gap-4">
             {featuredCourses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
