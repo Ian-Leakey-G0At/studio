@@ -35,7 +35,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-1 flex-col">
       <section className="w-full pt-12 md:pt-20 lg:pt-28">
         <div className="container mx-auto px-4 md:px-6">
           <Carousel
