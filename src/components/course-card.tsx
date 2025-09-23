@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -6,7 +7,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import type { Course } from "@/lib/types";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -24,37 +24,39 @@ export function CourseCard({ course }: CourseCardProps) {
       className="h-full interactive-glow rounded-3xl"
     >
       <Card className="flex flex-col overflow-hidden h-full">
-        <CardHeader className="p-0">
-          <Link href={`/courses/${course.id}`} className="block">
-            <div className="aspect-[4/3] relative">
-              {image && (
-                <Image
-                  src={image.imageUrl}
-                  alt={course.title}
-                  fill
-                  className="object-cover rounded-t-3xl"
-                  data-ai-hint={image.imageHint}
-                />
-              )}
+        <div className="relative w-full aspect-[3/4]">
+          {image && (
+            <Image
+              src={image.imageUrl}
+              alt={course.title}
+              fill
+              className="object-cover rounded-3xl"
+              data-ai-hint={image.imageHint}
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-3xl" />
+          <div className="absolute inset-0 flex flex-col p-6">
+            <div className="flex-1">
+              <div className="flex items-center text-xs text-background/80 bg-foreground/20 backdrop-blur-md rounded-md px-2 py-1 w-fit">
+                <Clock className="h-3 w-3 mr-1.5"/>
+                <span>{course.duration}</span>
+              </div>
             </div>
-          </Link>
-        </CardHeader>
-        <CardContent className="p-6 flex-1">
-          <CardTitle className="font-bold text-lg mb-2">
-            <Link href={`/courses/${course.id}`} className="hover:text-primary transition-colors">
-              {course.title}
-            </Link>
-          </CardTitle>
-          <p className="text-muted-foreground text-sm line-clamp-2">
-            {course.description}
-          </p>
-        </CardContent>
-        <CardFooter className="p-6 pt-0">
-           <div className="flex items-center text-sm text-muted-foreground">
-              <Clock className="h-4 w-4 mr-1.5"/>
-              {course.duration}
+            <div className="space-y-4">
+              <CardTitle className="font-black text-2xl text-background">
+                <Link href={`/courses/${course.id}`} className="hover:text-primary/90 transition-colors">
+                  {course.title}
+                </Link>
+              </CardTitle>
+              <p className="text-background/80 text-sm line-clamp-2">
+                {course.description}
+              </p>
+              <Button asChild className="rounded-full bg-background text-foreground hover:bg-background/90 w-full interactive-glow">
+                <Link href={`/courses/${course.id}`}>View Course</Link>
+              </Button>
+            </div>
           </div>
-        </CardFooter>
+        </div>
       </Card>
     </motion.div>
   );
