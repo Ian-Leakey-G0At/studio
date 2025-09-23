@@ -17,24 +17,20 @@ type LearnPageProps = {
 };
 
 export default function LearnPage({ params: paramsProp }: LearnPageProps) {
-  const { userProfile, loading } = useAuth();
+  const { userProfile, loading, user } = useAuth();
   const router = useRouter();
   const params = use(paramsProp);
   const { id } = params;
 
   const course = courses.find((c) => c.id === id);
 
-  // In a real app, this check would be more robust.
-  // The middleware protects the route, but we should also check if the *specific* user has purchased *this* course.
-  // For this demo, we'll grant access if the user is logged in and the course exists.
-  // The purchase logic is simplified.
-  const hasAccess = !loading && !!userProfile;
+  const hasAccess = !loading && user && userProfile?.purchasedCourses?.includes(id);
 
   useEffect(() => {
-    if (!loading && !userProfile) {
-      router.push(`/login?redirect_to=/learn/${id}`);
+    if (!loading && !user) {
+      router.push(`/login?courseId=${id}&redirect_to=/learn/${id}`);
     }
-  }, [loading, userProfile, router, id]);
+  }, [loading, user, router, id]);
 
   if (!course) {
     notFound();

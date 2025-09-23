@@ -1,11 +1,14 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
 import { courses } from "@/lib/data";
 import { CourseCard } from "@/components/course-card";
 import { ToolRecommender } from "@/components/dashboard/tool-recommender";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-export default function DashboardPage() {
+export default function AccountPage() {
   const { userProfile, loading } = useAuth();
 
   if (loading) {
@@ -42,7 +45,12 @@ export default function DashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground">You haven't purchased any courses yet.</p>
+          <div className='text-center border-2 border-dashed border-muted-foreground/30 rounded-lg p-12'>
+            <p className="text-muted-foreground mb-4">You haven't purchased any courses yet.</p>
+            <Button asChild>
+                <Link href="/courses">Browse Courses</Link>
+            </Button>
+          </div>
         )}
       </section>
       

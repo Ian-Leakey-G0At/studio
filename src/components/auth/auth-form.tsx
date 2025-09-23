@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -11,7 +12,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase/clientApp";
+import { auth, db } from "@/lib/firebase/clientApp";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Form,
@@ -26,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -51,7 +53,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard';
+  const redirectTo = searchParams.get('redirect_to') || '/account';
+  const courseId = searchParams.get('courseId');
 
   const formSchema = mode === "login" ? loginSchema : signupSchema;
   type FormData = z.infer<typeof formSchema>;
@@ -64,10 +67,20 @@ export function AuthForm({ mode }: AuthFormProps) {
         : { email: "", password: "" },
   });
 
+  const updatePurchasedCourses = async (userId: string) => {
+    if (courseId) {
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        purchasedCourses: arrayUnion(courseId),
+      });
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     setError(null);
     try {
+      let user;
       if (mode === "signup") {
         const { displayName, email, password } = data as z.infer<typeof signupSchema>;
         const userCredential = await createUserWithEmailAndPassword(
@@ -76,11 +89,21 @@ export function AuthForm({ mode }: AuthFormProps) {
           password
         );
         await updateProfile(userCredential.user, { displayName });
+        user = userCredential.user;
       } else {
         const { email, password } = data as z.infer<typeof loginSchema>;
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        user = userCredential.user;
       }
-      router.push(redirectTo);
+      
+      await updatePurchasedCourses(user.uid);
+      
+      if (courseId) {
+        router.push(`/learn/${courseId}`);
+      } else {
+        router.push(redirectTo);
+      }
+
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -93,8 +116,15 @@ export function AuthForm({ mode }: AuthFormProps) {
     setError(null);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push(redirectTo);
+      const result = await signInWithPopup(auth, provider);
+      await updatePurchasedCourses(result.user.uid);
+      
+      if (courseId) {
+        router.push(`/learn/${courseId}`);
+      } else {
+        router.push(redirectTo);
+      }
+
     } catch (e: any) {
       setError(e.message);
     } finally {

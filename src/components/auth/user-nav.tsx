@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -67,9 +68,9 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard">
+            <Link href="/account">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Dashboard</span>
+              <span>My Account</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

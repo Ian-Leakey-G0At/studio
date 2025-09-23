@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext, createContext } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/clientApp";
 import type { AuthContextType, UserProfile } from "@/lib/types";
-import { doc, onSnapshot, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,10 +34,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         // Get or create user profile in Firestore
         const userRef = doc(db, "users", user.uid);
-        onSnapshot(userRef, (snapshot) => {
-          if (snapshot.exists()) {
-            setUserProfile(snapshot.data() as UserProfile);
-          } else {
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            onSnapshot(userRef, (snapshot) => {
+                setUserProfile(snapshot.data() as UserProfile);
+            });
+        } else {
             const newUserProfile: UserProfile = {
               uid: user.uid,
               email: user.email,
@@ -45,10 +48,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               photoURL: user.photoURL,
               purchasedCourses: [],
             };
-            setDoc(userRef, { ...newUserProfile, createdAt: serverTimestamp() });
+            await setDoc(userRef, { ...newUserProfile, createdAt: serverTimestamp() });
             setUserProfile(newUserProfile);
-          }
-        });
+        }
         
       } else {
         setUser(null);

@@ -1,15 +1,14 @@
 
 "use client";
 
+import { use } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { courses } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, BarChart, Film, FileText } from "lucide-react";
-import Link from "next/link";
-import { use } from "react";
+import { Clock, Film, FileText } from "lucide-react";
+import { PurchaseModal } from "@/components/purchase-modal";
 
 type CoursePageProps = {
   params: {
@@ -51,12 +50,7 @@ export default function CoursePage({ params: paramsProp }: CoursePageProps) {
               </div>
             </div>
              <div className="!mt-8">
-              {/* In a real app, this would be a proper checkout flow */}
-              <Button asChild size="lg" className="w-full md:w-auto font-bold text-lg">
-                  <Link href={`/learn/${course.id}`}>
-                    Buy Now for ${course.price}
-                  </Link>
-              </Button>
+              <PurchaseModal course={course} />
                <p className="text-xs text-muted-foreground mt-2">
                 One-time payment. Lifetime access.
               </p>

@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { CourseCard } from "@/components/course-card";
 import { courses } from "@/lib/data";
@@ -26,9 +27,6 @@ export default function Home() {
                 <Link href="/courses">
                   Browse Courses <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/about">Learn More</Link>
               </Button>
             </div>
           </div>

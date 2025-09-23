@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -26,6 +27,12 @@ export function Header() {
             className="transition-colors hover:text-foreground/80 text-foreground/60"
           >
             Courses
+          </Link>
+           <Link
+            href="/account"
+            className="transition-colors hover:text-foreground/80 text-foreground/60"
+          >
+            My Account
           </Link>
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
