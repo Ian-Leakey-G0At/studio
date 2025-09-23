@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 const { fontFamily } = require("tailwindcss/defaultTheme")
@@ -12,7 +13,7 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem", // Changed from 2rem
       screens: {
         "2xl": "1400px",
       },
@@ -59,8 +60,8 @@ export default {
         },
       },
       borderRadius: {
-        '3xl': '2rem',
-        '2xl': '1.5rem',
+        '3xl': '1.75rem', // Adjusted from 2rem
+        '2xl': '1.25rem', // Adjusted from 1.5rem
         xl: '1rem',
         lg: "0.75rem",
         md: "calc(0.75rem - 2px)",
