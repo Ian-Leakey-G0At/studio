@@ -18,8 +18,8 @@ export function Header() {
   const { user, loading } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 w-full p-4">
-      <div className="flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full">
+      <div className="flex items-center justify-between gap-4 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="lg" className="rounded-2xl interactive-glow px-6">

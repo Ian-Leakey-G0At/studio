@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
@@ -25,7 +26,7 @@ export default function RootLayout({
         )}
       >
         <AuthProvider>
-          <div className="flex min-h-screen flex-col">
+          <div className="container flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
