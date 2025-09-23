@@ -35,9 +35,9 @@ export default function Home() {
     if (!autoplay) {
       return;
     }
-
+    
     const updateProgress = () => {
-      setProgress(autoplay.scrollProgress());
+      setProgress(autoplay.progress());
       requestAnimationFrame(updateProgress);
     };
     requestAnimationFrame(updateProgress);
