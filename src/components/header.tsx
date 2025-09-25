@@ -20,47 +20,49 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="container flex items-center justify-between gap-4 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="lg" className="rounded-xl interactive-glow flex-[1]">
-              MORE
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="glass-container mt-2 w-56 rounded-2xl">
-            <DropdownMenuItem asChild>
-              <Link href="/courses">Courses</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/about">About</Link>
-            </DropdownMenuItem>
-            {user && (
+        <div className="flex flex-[1] sm:flex-none">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="lg" className="rounded-xl interactive-glow w-full">
+                MORE
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="glass-container mt-2 w-56 rounded-2xl">
               <DropdownMenuItem asChild>
-                <Link href="/account">My Account</Link>
+                <Link href="/courses">Courses</Link>
               </DropdownMenuItem>
-            )}
-            {!user && !loading && (
-              <>
+              <DropdownMenuItem asChild>
+                <Link href="/about">About</Link>
+              </DropdownMenuItem>
+              {user && (
                 <DropdownMenuItem asChild>
-                  <Link href="/login">
-                    <LogIn className="mr-2 h-4 w-4" />
-                    Log In
-                  </Link>
+                  <Link href="/account">My Account</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/signup">
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Sign Up
-                  </Link>
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              )}
+              {!user && !loading && (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/login">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Log In
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/signup">
+                      <UserPlus className="mr-2 h-4 w-4" />
+                      Sign Up
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-        <Link href="/" className="flex-[5]">
+        <Link href="/" className="flex-[5] sm:flex-auto">
           <div className="w-full text-center p-4 rounded-xl glass-container interactive-glow">
             <span className="text-sm font-bold tracking-widest uppercase">
-              Revenge Money & Logo
+              Revenge Money &amp; Logo
             </span>
           </div>
         </Link>

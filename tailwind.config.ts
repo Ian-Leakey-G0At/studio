@@ -13,7 +13,7 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "1rem", // Changed from 2rem
+      padding: "1rem", 
       screens: {
         "2xl": "1400px",
       },
@@ -60,12 +60,12 @@ export default {
         },
       },
       borderRadius: {
-        '3xl': '1.75rem', // Adjusted from 2rem
-        '2xl': '1.25rem', // Adjusted from 1.5rem
-        xl: '1rem',
-        lg: "0.75rem",
-        md: "calc(0.75rem - 2px)",
-        sm: "calc(0.75rem - 4px)",
+        '3xl': 'var(--radius)',
+        '2xl': 'calc(var(--radius) - 0.5rem)',
+        xl: 'calc(var(--radius) - 1rem)',
+        lg: "calc(var(--radius) - 1.25rem)",
+        md: "calc(var(--radius) - 1.4rem)",
+        sm: "calc(var(--radius) - 1.5rem)",
       },
       keyframes: {
         'accordion-down': {
