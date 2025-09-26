@@ -3,18 +3,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, PlaySquare, User, Cog } from "lucide-react";
+import { Home, PlaySquare, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", icon: Home, label: "Home" },
   { href: "/courses", icon: PlaySquare, label: "Courses" },
   { href: "/account", icon: User, label: "Account" },
-  { href: "/settings", icon: Cog, label: "Settings" },
 ];
 
 export function Footer() {
   const pathname = usePathname();
+
+  // Do not show footer on single course pages
+  if (pathname.startsWith('/courses/')) {
+    return null;
+  }
 
   return (
     <footer className="sticky bottom-0 border-t bg-background/80 pb-4 pt-2 backdrop-blur-lg">
