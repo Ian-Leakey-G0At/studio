@@ -2,7 +2,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AuthProvider } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
@@ -27,7 +26,6 @@ export default function RootLayout({
       >
         <AuthProvider>
           <div className="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
-            <Header />
             <main className="flex-grow">{children}</main>
             <Footer />
           </div>
