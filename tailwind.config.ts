@@ -20,9 +20,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Satoshi', ...fontFamily.sans],
-        body: ['Satoshi', ...fontFamily.sans],
-        heading: ['Satoshi', ...fontFamily.sans],
+        sans: ['Inter', ...fontFamily.sans],
+        body: ['Inter', ...fontFamily.sans],
+        headline: ['Space Grotesk', ...fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",

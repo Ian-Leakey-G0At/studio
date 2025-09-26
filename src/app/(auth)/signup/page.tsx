@@ -7,11 +7,11 @@ function SignupPageContent() {
     return (
         <>
             <AuthForm mode="signup" />
-            <p className="mt-8 text-center text-sm text-muted-foreground">
-                Already a member?{" "}
+            <p className="mt-10 text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
                 <Link
                 href="/login"
-                className="font-semibold leading-6 text-primary hover:text-primary/80"
+                className="font-medium leading-6 text-primary hover:underline"
                 >
                 Log in
                 </Link>
@@ -27,4 +27,3 @@ export default function SignupPage() {
         </Suspense>
     );
 }
-

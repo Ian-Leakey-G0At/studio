@@ -7,13 +7,13 @@ function LoginPageContent() {
     return (
         <>
             <AuthForm mode="login" />
-            <p className="mt-8 text-center text-sm text-muted-foreground">
-                Not a member?{" "}
+            <p className="mt-10 text-center text-sm text-muted-foreground">
+                Don't have an account?{" "}
                 <Link
                 href="/signup"
-                className="font-semibold leading-6 text-primary hover:text-primary/80"
+                className="font-medium leading-6 text-primary hover:underline"
                 >
-                Sign up now
+                Sign up
                 </Link>
             </p>
         </>
