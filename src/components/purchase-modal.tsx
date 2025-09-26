@@ -64,12 +64,12 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
 
   const TriggerButton = () => (
     isAlreadyPurchased ? (
-        <Button asChild size="lg" className="w-full font-bold text-lg interactive-glow">
+        <Button asChild size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
             <Link href={`/learn/${course.id}`}>Go to Course</Link>
         </Button>
     ) : (
-       <Button size="lg" className="w-full font-bold text-lg interactive-glow">
-          Buy Now for ${course.price}
+       <Button size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
+          Purchase Course - ${course.price}
       </Button>
     )
   );

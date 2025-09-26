@@ -15,8 +15,8 @@ const navItems = [
 export function Footer() {
   const pathname = usePathname();
 
-  // Do not show footer on single course pages
-  if (pathname.startsWith('/courses/')) {
+  // Do not show footer on single course pages to avoid conflict with sticky purchase footer
+  if (pathname.includes('/courses/')) {
     return null;
   }
 
