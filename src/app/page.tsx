@@ -1,7 +1,7 @@
 
-import { CourseCard } from "@/components/course-card";
-import { GoodLuckButton } from "@/components/home/good-luck-button";
 import { HeroCarousel } from "@/components/home/hero-carousel";
+import { GoodLuckButton } from "@/components/home/good-luck-button";
+import { HomeCourseCard } from "@/components/home/home-course-card";
 import { courses } from "@/lib/data";
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
         <h2 className="font-heading text-2xl font-bold mb-4">Our Courses</h2>
         <div className="grid grid-cols-2 gap-4">
           {featuredCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
+            <HomeCourseCard key={course.id} course={course} />
           ))}
         </div>
       </section>
