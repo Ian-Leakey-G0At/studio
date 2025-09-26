@@ -1,5 +1,5 @@
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Footer } from '@/components/footer';
@@ -9,6 +9,12 @@ import { cn } from '@/lib/utils';
 export const metadata: Metadata = {
   title: 'Revenge Money Academy',
   description: 'Actionable financial education for taking control of your financial destiny.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({

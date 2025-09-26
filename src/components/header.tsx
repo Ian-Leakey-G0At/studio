@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 
 export function Header() {
   return (
-    <header className="flex items-center justify-between p-4 sticky top-0 z-50 bg-transparent transition-colors duration-300">
+    <header className="flex items-center justify-between p-4 sticky top-0 z-50 bg-transparent transition-colors duration-300" style={{ paddingTop: 'env(safe-area-inset-top)'}}>
       <div className="w-11"></div>
       <Link href="/" className="font-heading text-lg font-bold text-center flex-1">
         Revenge Money Academy

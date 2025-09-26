@@ -1,4 +1,5 @@
 
+import { Header } from "@/components/header";
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { GoodLuckButton } from "@/components/home/good-luck-button";
 import { HomeCourseCard } from "@/components/home/home-course-card";
@@ -9,6 +10,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
+      <Header />
       <div className="p-4 pt-0">
         <HeroCarousel />
       </div>
