@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('__session')?.value;
 
   // Define protected routes
-  const protectedRoutes = ['/account', '/learn'];
+  const protectedRoutes = ['/account', '/learn', '/dashboard'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
   if (!isProtectedRoute) {
@@ -41,5 +41,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/account/:path*', '/learn/:path*'],
+  matcher: ['/account/:path*', '/learn/:path*', '/dashboard/:path*'],
 };
