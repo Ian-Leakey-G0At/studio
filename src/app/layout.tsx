@@ -22,13 +22,13 @@ export default function RootLayout({
       <body
         className={cn(
           'font-body antialiased',
-          'bg-gradient-to-br from-black to-zinc-900'
+          'bg-background'
         )}
       >
         <AuthProvider>
-          <div className="flex min-h-screen flex-col">
+          <div className="relative flex min-h-screen w-full flex-col justify-between overflow-x-hidden">
             <Header />
-            <main className="flex-1 container">{children}</main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </div>
           <Toaster />

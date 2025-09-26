@@ -22,7 +22,7 @@ export default {
       fontFamily: {
         sans: ['Satoshi', ...fontFamily.sans],
         body: ['Satoshi', ...fontFamily.sans],
-        headline: ['Satoshi', ...fontFamily.sans],
+        heading: ['Satoshi', ...fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -60,12 +60,12 @@ export default {
         },
       },
       borderRadius: {
-        '3xl': 'var(--radius)',
-        '2xl': 'calc(var(--radius) - 0.5rem)',
-        xl: 'calc(var(--radius) - 1rem)',
-        lg: "calc(var(--radius) - 1.25rem)",
-        md: "calc(var(--radius) - 1.4rem)",
-        sm: "calc(var(--radius) - 1.5rem)",
+        '3xl': 'calc(var(--radius) + 1rem)',
+        '2xl': 'calc(var(--radius) + 0.5rem)',
+        xl: 'var(--radius)',
+        lg: "calc(var(--radius) - 0.25rem)",
+        md: "calc(var(--radius) - 0.5rem)",
+        sm: "calc(var(--radius) - 0.75rem)",
       },
       keyframes: {
         'accordion-down': {
@@ -91,5 +91,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/container-queries')],
 } satisfies Config;
