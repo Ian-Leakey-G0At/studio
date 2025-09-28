@@ -18,6 +18,7 @@ export interface UserProfile {
   displayName: string | null;
   photoURL: string | null;
   purchasedCourses?: string[];
+  role?: 'user' | 'admin';
 }
 
 export type AuthContextType = {

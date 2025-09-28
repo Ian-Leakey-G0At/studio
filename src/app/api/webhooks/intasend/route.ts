@@ -1,10 +1,8 @@
 
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import admin from '@/lib/firebase/adminApp';
+import { getDb } from '@/lib/firebase/adminApp';
 
-
-// TODO: Move this to a utils file and import
 function verifyIntaSendSignature(payload: string, signature: string, secret: string): boolean {
     const crypto = require('crypto');
     const hmac = crypto.createHmac('sha256', secret);
@@ -14,7 +12,7 @@ function verifyIntaSendSignature(payload: string, signature: string, secret: str
 }
 
 export async function POST(request: Request) {
-    const body = await request.text(); 
+    const body = await request.text();
     const signature = headers().get('x-intasend-signature');
     const webhookSecret = process.env.INTASEND_WEBHOOK_SECRET;
 
@@ -31,23 +29,27 @@ export async function POST(request: Request) {
     const event = JSON.parse(body);
 
     if (event.type === 'payment.succeeded') {
-        console.log('Received successful payment event:', event.data);
-
         const { meta, invoice } = event.data;
         const { user_id, course_id } = meta;
         const { tracking_id } = invoice;
 
-        if (!user_id || !course_id) {
-            console.error('Missing user_id or course_id in webhook metadata');
-            return NextResponse.json({ error: 'Missing metadata' }, { status: 400 });
+        if (!user_id || !course_id || !tracking_id) {
+            console.error('Missing user_id, course_id, or tracking_id in webhook payload');
+            return NextResponse.json({ error: 'Missing required metadata' }, { status: 400 });
         }
 
         try {
-            const firestore = admin.firestore();
-            const userRef = firestore.collection('users').doc(user_id);
+            const db = getDb();
+            const paymentRef = db.collection('payments').doc(tracking_id);
+            const userRef = db.collection('users').doc(user_id);
 
-            // Use a transaction to ensure atomicity
-            await firestore.runTransaction(async (transaction) => {
+            const paymentDoc = await paymentRef.get();
+            if (paymentDoc.exists) {
+                console.log(`Webhook event for tracking_id: ${tracking_id} already processed.`);
+                return NextResponse.json({ status: 'success', message: 'Already processed' });
+            }
+
+            await db.runTransaction(async (transaction) => {
                 const userDoc = await transaction.get(userRef);
                 if (!userDoc.exists) {
                     throw new Error(`User with ID ${user_id} not found.`);
@@ -60,12 +62,11 @@ export async function POST(request: Request) {
                     transaction.update(userRef, {
                         purchasedCourses: [...purchasedCourses, course_id],
                     });
-                    console.log(`Course ${course_id} added to user ${user_id}.`);
+                } else {
+                    console.log(`User ${user_id} already owns course ${course_id}. No update needed.`)
                 }
             });
 
-            // Optionally, save the transaction details for auditing
-            const paymentRef = firestore.collection('payments').doc(tracking_id);
             await paymentRef.set({
                 userId: user_id,
                 courseId: course_id,
@@ -75,12 +76,13 @@ export async function POST(request: Request) {
                 createdAt: new Date(),
             });
 
+            console.log(`Successfully processed payment for user ${user_id} and course ${course_id}.`);
+
         } catch (error: any) {
-            console.error('Error updating user courses in Firestore:', error.message);
+            console.error('Error processing webhook:', error.message);
             return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
         }
     }
 
-    // Acknowledge receipt of the webhook
     return NextResponse.json({ status: 'success' });
 }

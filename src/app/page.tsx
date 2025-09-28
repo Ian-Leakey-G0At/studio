@@ -3,9 +3,10 @@ import { Header } from "@/components/header";
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { GoodLuckButton } from "@/components/home/good-luck-button";
 import { HomeCourseCard } from "@/components/home/home-course-card";
-import { courses } from "@/lib/data";
+import { getAllCourses } from "@/actions/courses";
 
-export default function Home() {
+export default async function Home() {
+  const courses = await getAllCourses();
   const featuredCourses = courses.slice(0, 6);
 
   return (

@@ -2,12 +2,27 @@
 import { NextResponse } from 'next/server';
 import IntaSend from 'intasend-node';
 import { v4 as uuidv4 } from 'uuid';
+import { getAuthenticatedUser } from '@/lib/firebase/auth';
+import { getCourse } from '@/actions/courses';
 
 export async function POST(request: Request) {
-    const body = await request.json();
-    const { amount, email, firstName, lastName, courseId, userId } = body;
+    const user = await getAuthenticatedUser();
+    if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    // Validate environment variables
+    const body = await request.json();
+    const { courseId } = body;
+
+    if (!courseId) {
+        return NextResponse.json({ error: 'courseId is required' }, { status: 400 });
+    }
+
+    const course = await getCourse(courseId);
+    if (!course) {
+        return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+    }
+
     const publishableKey = process.env.INTASEND_PUBLISHABLE_KEY;
     const secretKey = process.env.INTASEND_API_SECRET;
 
@@ -19,26 +34,26 @@ export async function POST(request: Request) {
     const intasend = new IntaSend({
         publishableKey,
         secretKey,
-        test: false, // Set to false for live environment
+        test: process.env.NODE_ENV !== 'production', 
     });
 
     const host = request.headers.get('host');
     const protocol = host?.includes('localhost') ? 'http' : 'https';
-    const redirectUrl = `${protocol}://${host}/courses`; // Redirect to courses page after payment
+    const redirectUrl = `${protocol}://${host}/courses/${courseId}?purchase=success`;
     const transactionId = uuidv4();
 
     try {
         const response = await intasend.checkout.create({
-            amount: Number(amount), // Ensure amount is a number
+            amount: course.price, 
             currency: 'KES',
-            email,
-            first_name: firstName,
-            last_name: lastName,
-            method: 'mpesa-stk-push',
+            email: user.email || 'customer@example.com', // Fallback email if not available
+            // IntaSend requires first_name and last_name, but we can use placeholders if not available
+            first_name: user.name?.split(' ')[0] || 'Customer',
+            last_name: user.name?.split(' ')[1] || 'Name',
             host: redirectUrl, 
-            api_ref: transactionId, // Unique reference for the transaction
+            api_ref: transactionId,
             meta: {
-                user_id: userId,
+                user_id: user.uid,
                 course_id: courseId,
             },
         });

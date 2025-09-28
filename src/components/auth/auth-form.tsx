@@ -79,6 +79,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         displayName: user.displayName,
         photoURL: user.photoURL,
         purchasedCourses: [],
+        role: 'user',
       };
       await setDoc(userRef, { ...newUserProfile, createdAt: serverTimestamp() });
     }
@@ -152,7 +153,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       router.push(courseId ? `/learn/${courseId}` : redirectTo);
       router.refresh();
 
-    } catch (e: any) => {
+    } catch (e: any) {
       setError(e.message.replace('Firebase: ', '').replace(`(${e.code})`, ''));
     } finally {
       setIsLoading(false);

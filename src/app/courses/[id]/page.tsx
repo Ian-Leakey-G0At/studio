@@ -1,173 +1,78 @@
 
-"use client";
-
-import { use, Suspense, useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { getAllCourses, getCourse } from "@/actions/courses";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Download, Play } from "lucide-react";
-import { PurchaseModal } from "@/components/purchase-modal";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase/clientApp";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Course } from "@/lib/types";
+import { notFound } from 'next/navigation';
+import { CheckCircle } from "lucide-react";
+import { ResponsiveImage } from "@/components/responsive-image";
 
-type CoursePageProps = {
-  params: {
-    id: string;
-  };
-};
-
-function CoursePageContent({ params: paramsProp }: CoursePageProps) {
-  const params = use(paramsProp);
-  const router = useRouter();
-  const { id } = params;
-  const [course, setCourse] = useState<Course | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCourse = async () => {
-      if (id) {
-        const courseRef = doc(db, "courses", id as string);
-        const courseSnap = await getDoc(courseRef);
-        if (courseSnap.exists()) {
-          setCourse({ ...courseSnap.data(), id: courseSnap.id } as Course);
-        } else {
-          notFound();
-        }
-      }
-      setIsLoading(false);
-    };
-
-    fetchCourse();
-  }, [id]);
-
-  if (isLoading) {
-    return <div className="h-screen w-full animate-pulse bg-muted/20" />;
-  }
-
-  if (!course) {
-    notFound();
-  }
-
-  const image = PlaceHolderImages.find((img) => img.id === course.imageId);
-
-  const courseContent = [
-    {
-      icon: Play,
-      title: "Lesson 1",
-      description: "Introduction to Financial Concepts",
-    },
-    {
-      icon: Play,
-      title: "Lesson 2",
-      description: "Analyzing Your Spending",
-    },
-    {
-      icon: Play,
-      title: "Lesson 3",
-      description: "Advanced Budgeting Strategies",
-    },
-    {
-      icon: Download,
-      title: "Resources",
-      description: "Downloadable Worksheets & Guides",
-    },
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <header className="p-4 sticky top-0 bg-background/80 dark:bg-background/80 backdrop-blur-sm z-10 border-b border-border">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="h-11 w-11 rounded-full"
-            onClick={() => router.back()}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-          <h1 className="font-heading text-lg font-bold text-center">
-            Course Details
-          </h1>
-          <div className="w-11 h-11"></div>
-        </div>
-      </header>
-
-      <main className="flex-grow p-4 space-y-6 pb-24">
-        <div className="space-y-2">
-          <h2 className="font-heading text-3xl font-bold">{course.title}</h2>
-          <div className="flex items-center space-x-2 text-muted-foreground">
-            <p className="text-sm font-medium">{course.category}</p>
-            <span className="text-xs">●</span>
-            <p className="text-sm font-medium">{course.duration}</p>
-            <span className="text-xs">●</span>
-            <p className="text-sm font-medium font-heading text-primary">
-              ${course.price}
-            </p>
-          </div>
-        </div>
-
-        <div className="aspect-video w-full relative rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-black flex items-center justify-center">
-            {image && (
-              <Image
-                src={image.imageUrl}
-                alt={course.title}
-                fill
-                className="absolute inset-0 w-full h-full object-cover opacity-50"
-                data-ai-hint={image.imageHint}
-              />
-            )}
-            <Button
-              size="icon"
-              className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Play className="h-8 w-8 fill-current" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h3 className="font-heading text-xl font-bold">Course Content</h3>
-          <ul className="space-y-3">
-            {courseContent.map((item, index) => (
-              <li
-                key={index}
-                className="flex items-center gap-4 p-4 rounded-lg bg-secondary h-[72px]"
-              >
-                <div className="flex items-center justify-center rounded-full bg-primary/20 shrink-0 size-12 text-primary">
-                  <item.icon className="h-6 w-6" />
-                </div>
-                <div className="flex-grow">
-                  <p className="font-body text-base font-medium text-foreground">
-                    {item.title}
-                  </p>
-                  <p className="font-body text-sm text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </main>
-      
-      <div className="p-4 sticky bottom-0 bg-background/80 dark:bg-background/80 backdrop-blur-sm border-t border-border">
-          <PurchaseModal course={course} />
-      </div>
-    </div>
-  );
+export async function generateStaticParams() {
+    const courses = await getAllCourses();
+    return courses.map((course) => ({
+        id: course.id,
+    }));
 }
 
-export default function CoursePage({ params }: CoursePageProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="h-screen w-full animate-pulse bg-muted/20" />
-      }
-    >
-      <CoursePageContent params={params} />
-    </Suspense>
-  );
+export default async function CourseDetailsPage({ 
+    params, 
+    searchParams 
+}: { 
+    params: { id: string },
+    searchParams: { [key: string]: string | string[] | undefined }
+}) {
+    const course = await getCourse(params.id);
+
+    if (!course) {
+        notFound();
+    }
+
+    const purchaseSuccess = searchParams.purchase === 'success';
+
+    return (
+        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto py-12 px-4">
+            <div className="flex flex-col gap-4">
+                {purchaseSuccess && (
+                    <Alert variant="default" className="mb-4 bg-green-100 dark:bg-green-900/20">
+                        <CheckCircle className="h-4 w-4" />
+                        <AlertTitle>Purchase Successful!</AlertTitle>
+                        <AlertDescription>
+                            You now have access to this course. Enjoy your learning!
+                        </AlertDescription>
+                    </Alert>
+                )}
+                <div className="flex justify-center items-start">
+                    <ResponsiveImage 
+                        src={course.image} 
+                        alt={course.title} 
+                        width={500} 
+                        height={500} 
+                        className="rounded-lg shadow-lg"
+                        priority
+                    />
+                </div>
+            </div>
+            <div className="flex flex-col gap-6">
+                <h1 className="text-4xl font-bold">{course.title}</h1>
+                <p className="text-lg text-muted-foreground">{course.description}</p>
+                <div className="text-lg font-semibold">${course.price}</div>
+                <Button size="lg">Purchase Course</Button>
+                <div className="mt-6 space-y-4">
+                    <h2 className="text-2xl font-semibold">About this course</h2>
+                    <p className="text-muted-foreground">{course.longDescription}</p>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span className="font-semibold">Duration:</span> {course.duration}
+                        </div>
+                        <div>
+                            <span className="font-semibold">Category:</span> {course.category}
+                        </div>
+                        <div>
+                            <span className="font-semibold">Format:</span> {course.format}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

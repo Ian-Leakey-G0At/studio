@@ -1,7 +1,7 @@
 
 import { notFound } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase"; // Assuming you have a firebase config file
+import { db } from "@/lib/firebase/clientApp"; // Assuming you have a firebase config file
 import { VideoPlayer } from "@/components/video-player";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

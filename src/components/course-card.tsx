@@ -12,7 +12,7 @@ type CourseCardProps = {
 };
 
 export function CourseCard({ course }: CourseCardProps) {
-  const image = PlaceHolderImages.find(img => img.id === course.imageId);
+  const image = PlaceHolderImages.find(img => img.id === course.imageId) || PlaceHolderImages[0];
 
   return (
     <Link href={`/courses/${course.id}`} className="block group">
