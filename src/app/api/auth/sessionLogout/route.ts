@@ -3,13 +3,14 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const sessionCookie = cookies().get("__session")?.value;
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get("__session")?.value;
   
   if (!sessionCookie) {
     return NextResponse.json({ status: 'success', message: 'No session to clear.' });
   }
 
-  cookies().delete("__session");
+  cookieStore.delete("__session");
 
   try {
     const decodedClaims = await getAuth().verifySessionCookie(sessionCookie);
