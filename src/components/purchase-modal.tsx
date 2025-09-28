@@ -15,8 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import type { Course } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '@/lib/firebase/clientApp';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -29,36 +27,58 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [purchaseComplete, setPurchaseComplete] = useState(false);
 
   const handlePurchase = async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    if (user) {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        purchasedCourses: arrayUnion(course.id),
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: course.price,
+          email: user?.email,
+          firstName: userProfile?.displayName?.split(' ')[0] || 'Guest',
+          lastName: userProfile?.displayName?.split(' ')[1] || '',
+          courseId: course.id,
+          userId: user?.uid,
+        }),
       });
-      router.push(`/learn/${course.id}`);
-    } else {
-      setPurchaseComplete(true);
-    }
-    
-    setIsLoading(false);
-  };
 
-  const handleLoginRedirect = () => {
-    router.push(`/signup?courseId=${course.id}`);
-  };
+      const data = await response.json();
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      setPurchaseComplete(false);
+      if (!response.ok) {
+        console.error('Checkout API error:', data.error);
+        // You should show a user-friendly error here, e.g., using a toast notification.
+        setIsLoading(false);
+        return;
+      }
+
+      if (data.url) {
+        // Redirect to the IntaSend checkout page
+        window.location.href = data.url;
+      } else {
+        console.error('No redirect URL found in IntaSend response');
+        setIsLoading(false);
+      }
+
+    } catch (error) {
+      console.error('Failed to initiate purchase:', error);
+      // You should show a user-friendly error here.
       setIsLoading(false);
     }
-    setIsOpen(open);
-  }
+  };
+
+  const handleOpenTrigger = () => {
+    if (!user) {
+      // Redirect to login if user is not authenticated, passing the course page as the redirect URL
+      router.push(`/login?redirect=/courses/${course.id}`);
+    } else {
+      // Open the modal if user is authenticated
+      setIsOpen(true);
+    }
+  };
 
   const isAlreadyPurchased = userProfile?.purchasedCourses?.includes(course.id);
 
@@ -68,53 +88,35 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
             <Link href={`/learn/${course.id}`}>Go to Course</Link>
         </Button>
     ) : (
-       <Button size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
+       <Button onClick={handleOpenTrigger} size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
           Purchase Course - ${course.price}
       </Button>
     )
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <TriggerButton />
       </DialogTrigger>
       <DialogContent>
-        {!purchaseComplete ? (
-            <>
-                <DialogHeader>
-                <DialogTitle>Complete Your Purchase</DialogTitle>
-                <DialogDescription>
-                    You're about to purchase "{course.title}" for ${course.price}.
-                </DialogDescription>
-                </DialogHeader>
-                <div className="py-4">
-                <p className="text-sm text-center text-muted-foreground">
-                    Payment provider integration would appear here.
-                </p>
-                </div>
-                <DialogFooter>
-                <Button onClick={handlePurchase} disabled={isLoading} className="w-full interactive-glow" size="lg">
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    {isLoading ? 'Processing Payment...' : 'Confirm Purchase'}
-                </Button>
-                </DialogFooter>
-            </>
-        ) : (
-            <>
-                <DialogHeader>
-                <DialogTitle>Purchase Successful!</DialogTitle>
-                <DialogDescription>
-                    Just one more step. Create an account or log in to access your course.
-                </DialogDescription>
-                </DialogHeader>
-                <DialogFooter className='!justify-center pt-4'>
-                    <Button onClick={handleLoginRedirect} className="w-full interactive-glow" size="lg">
-                        Create Account or Log In
-                    </Button>
-                </DialogFooter>
-            </>
-        )}
+        <DialogHeader>
+          <DialogTitle>Complete Your Purchase</DialogTitle>
+          <DialogDescription>
+              You're about to purchase "{course.title}" for ${course.price}.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="py-4 text-center">
+            <p className="text-sm text-muted-foreground">
+                You will be redirected to our secure payment partner, IntaSend, to complete the transaction.
+            </p>
+        </div>
+        <DialogFooter>
+          <Button onClick={handlePurchase} disabled={isLoading} className="w-full interactive-glow" size="lg">
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isLoading ? 'Redirecting...' : 'Proceed to Payment'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
