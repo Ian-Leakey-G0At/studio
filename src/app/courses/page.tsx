@@ -3,24 +3,42 @@
 
 import * as React from "react";
 import { CourseCard } from "@/components/course-card";
-import { courses } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ListFilter, Rows3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { db } from "@/lib/firebase/clientApp";
+import { collection, getDocs, query } from "firebase/firestore";
+import type { Course } from "@/lib/types";
+import { CourseCardSkeleton } from "@/components/course-card-skeleton";
 
 const categories = ["All", "Investing", "Debt", "Budgeting"];
 
 export default function CoursesPage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = React.useState("All");
+  const [courses, setCourses] = React.useState<Course[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchCourses = async () => {
+      setIsLoading(true);
+      const coursesCollection = collection(db, "courses");
+      const courseSnapshot = await getDocs(coursesCollection);
+      const courseList = courseSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as Course);
+      setCourses(courseList);
+      setIsLoading(false);
+    };
+
+    fetchCourses();
+  }, []);
 
   const filteredCourses = React.useMemo(() => {
     if (activeCategory === "All") {
       return courses;
     }
     return courses.filter((course) => course.category === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, courses]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -59,16 +77,22 @@ export default function CoursesPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {filteredCourses.map((course, index) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
-              <CourseCard course={course} />
-            </motion.div>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, index) => (
+              <CourseCardSkeleton key={index} />
+            ))
+          ) : (
+            filteredCourses.map((course, index) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <CourseCard course={course} />
+              </motion.div>
+            ))
+          )}
         </div>
       </main>
     </div>

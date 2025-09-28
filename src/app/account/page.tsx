@@ -1,14 +1,17 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { courses } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { db } from "@/lib/firebase/clientApp";
+import { doc, getDoc } from "firebase/firestore";
+import type { Course } from "@/lib/types";
 
 function getInitials(name: string | null | undefined) {
     if (!name) return "U";
@@ -55,17 +58,39 @@ function AccountPageSkeleton() {
     );
 }
 
-
 export default function AccountPage() {
-  const { userProfile, loading } = useAuth();
+  const { userProfile, loading: authLoading } = useAuth();
+  const [purchasedCourses, setPurchasedCourses] = useState<Course[]>([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    const fetchPurchasedCourses = async () => {
+      if (!authLoading && userProfile && userProfile.purchasedCourses.length > 0) {
+        setCoursesLoading(true);
+        try {
+          const coursePromises = userProfile.purchasedCourses.map(id => getDoc(doc(db, 'courses', id)));
+          const courseDocs = await Promise.all(coursePromises);
+          const coursesData = courseDocs
+            .filter(docSnap => docSnap.exists())
+            .map(docSnap => ({ ...docSnap.data(), id: docSnap.id }) as Course);
+          setPurchasedCourses(coursesData);
+        } catch (error) {
+          console.error("Error fetching purchased courses:", error);
+        } finally {
+          setCoursesLoading(false);
+        }
+      } else {
+        setPurchasedCourses([]);
+        setCoursesLoading(false);
+      }
+    };
+
+    fetchPurchasedCourses();
+  }, [authLoading, userProfile]);
+
+  if (authLoading || coursesLoading) {
     return <AccountPageSkeleton />;
   }
-
-  const purchasedCourses = userProfile?.purchasedCourses?.map(id => 
-    courses.find(c => c.id === id)
-  ).filter(Boolean) || [];
 
   return (
     <div className="grid gap-8">

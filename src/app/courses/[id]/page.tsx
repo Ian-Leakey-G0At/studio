@@ -1,14 +1,16 @@
 
 "use client";
 
-import { use, Suspense } from "react";
+import { use, Suspense, useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 import Image from "next/image";
-import { courses } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Download, Play } from "lucide-react";
 import { PurchaseModal } from "@/components/purchase-modal";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/clientApp";
+import type { Course } from "@/lib/types";
 
 type CoursePageProps = {
   params: {
@@ -20,7 +22,29 @@ function CoursePageContent({ params: paramsProp }: CoursePageProps) {
   const params = use(paramsProp);
   const router = useRouter();
   const { id } = params;
-  const course = courses.find((c) => c.id === id);
+  const [course, setCourse] = useState<Course | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (id) {
+        const courseRef = doc(db, "courses", id as string);
+        const courseSnap = await getDoc(courseRef);
+        if (courseSnap.exists()) {
+          setCourse({ ...courseSnap.data(), id: courseSnap.id } as Course);
+        } else {
+          notFound();
+        }
+      }
+      setIsLoading(false);
+    };
+
+    fetchCourse();
+  }, [id]);
+
+  if (isLoading) {
+    return <div className="h-screen w-full animate-pulse bg-muted/20" />;
+  }
 
   if (!course) {
     notFound();
