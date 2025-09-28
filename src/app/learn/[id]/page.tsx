@@ -1,14 +1,13 @@
 
-"use client";
-
-import { notFound, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/use-auth";
-import { courses } from "@/lib/data";
+import { notFound } from "next/navigation";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase"; // Assuming you have a firebase config file
 import { VideoPlayer } from "@/components/video-player";
-import { useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Lock } from "lucide-react";
+import { getAuthenticatedUser } from "@/lib/firebase/auth"; // You will need to create this helper
+import { supabaseAdmin } from "@/utils/supabase/admin";
 
 type LearnPageProps = {
   params: {
@@ -16,29 +15,39 @@ type LearnPageProps = {
   };
 };
 
-export default function LearnPage({ params: paramsProp }: LearnPageProps) {
-  const { userProfile, loading, user } = useAuth();
-  const router = useRouter();
-  const params = use(paramsProp);
+// This is now a Server Component
+export default async function LearnPage({ params }: LearnPageProps) {
   const { id } = params;
 
-  const course = courses.find((c) => c.id === id);
+  // 1. Get the authenticated user on the server
+  const user = await getAuthenticatedUser();
 
-  const hasAccess = !loading && user && userProfile?.purchasedCourses?.includes(id);
+  // Redirect to login if no user
+  if (!user) {
+    const loginUrl = new URL('/login', 'http://localhost:3000');
+    loginUrl.searchParams.set('courseId', id);
+    loginUrl.searchParams.set('redirect_to', `/learn/${id}`);
+    return <meta http-equiv="refresh" content={`0;url=${loginUrl.toString()}`} />;
+  }
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push(`/login?courseId=${id}&redirect_to=/learn/${id}`);
-    }
-  }, [loading, user, router, id]);
+  // 2. Fetch course and user profile from Firestore
+  const courseDocRef = doc(db, "courses", id);
+  const userDocRef = doc(db, "users", user.uid);
+  
+  const [courseSnap, userSnap] = await Promise.all([
+    getDoc(courseDocRef),
+    getDoc(userDocRef),
+  ]);
 
-  if (!course) {
+  if (!courseSnap.exists()) {
     notFound();
   }
-  
-  if (loading) {
-    return <div className="container mx-auto py-12"><div className="w-full aspect-video bg-muted animate-pulse rounded-lg"></div></div>;
-  }
+
+  const course = { id: courseSnap.id, ...courseSnap.data() };
+  const userProfile = userSnap.exists() ? userSnap.data() : null;
+
+  // 3. Verify if the user has purchased the course
+  const hasAccess = userProfile?.purchasedCourses?.includes(id);
 
   if (!hasAccess) {
      return (
@@ -52,7 +61,24 @@ export default function LearnPage({ params: paramsProp }: LearnPageProps) {
         </div>
      );
   }
-  
+
+  // 4. Generate a secure, time-limited URL for the video
+  // Assumes your videos are in a bucket named 'course-videos' and organized by course ID.
+  // e.g., /course-videos/course-101/video.mp4
+  const videoPath = `${id}/video.mp4`; // Example path, adjust if necessary
+  const { data, error } = await supabaseAdmin.storage
+    .from('course-videos') // Make sure this is your bucket name
+    .createSignedUrl(videoPath, 3600); // URL expires in 1 hour (3600 seconds)
+
+  if (error || !data) {
+    console.error("Error creating signed URL:", error);
+    // You might want to show a more user-friendly error page here
+    return <div className="container mx-auto py-12">Error loading video. Please try again later.</div>;
+  }
+
+  const videoUrl = data.signedUrl;
+
+  // 5. Render the page with the secure video URL
   return (
     <div className="bg-secondary min-h-[calc(100vh-theme(spacing.14))] py-12">
         <div className="container mx-auto px-4 md:px-6">
@@ -64,7 +90,7 @@ export default function LearnPage({ params: paramsProp }: LearnPageProps) {
                     </h1>
                 </div>
 
-                <VideoPlayer courseId={course.id} />
+                <VideoPlayer src={videoUrl} />
                 
                 <div className="prose prose-lg max-w-none text-foreground/80 mt-12 bg-background p-8 rounded-lg">
                     <h2 className="font-headline">Course Description</h2>
