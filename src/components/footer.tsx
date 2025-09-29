@@ -21,7 +21,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="sticky bottom-0 border-t bg-background/80 pt-2 backdrop-blur-lg" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
+    <footer className="sticky bottom-0 border-t bg-background/80 pb-4 pt-2 backdrop-blur-lg">
       <nav className="flex items-center justify-around">
         {navItems.map((item) => {
           const isActive = pathname === item.href;

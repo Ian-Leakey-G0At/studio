@@ -80,6 +80,9 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
     min-height: max(884px, 100dvh);
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
   .font-headline {
     font-family: 'Space Grotesk', sans-serif;
