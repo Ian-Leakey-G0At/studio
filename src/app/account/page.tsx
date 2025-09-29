@@ -1,155 +1,129 @@
-
 "use client";
-
-import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { db } from "@/lib/firebase/clientApp";
-import { doc, getDoc } from "firebase/firestore";
-import type { Course } from "@/lib/types";
-
-function getInitials(name: string | null | undefined) {
-    if (!name) return "U";
-    const names = name.split(" ");
-    if (names.length > 1) {
-      return names[0][0] + names[names.length - 1][0];
-    }
-    return name[0];
-}
-
-function AccountPageSkeleton() {
-    return (
-        <div className="space-y-8">
-            <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-4">
-                    <Skeleton className="h-24 w-24 rounded-full" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-7 w-40" />
-                        <Skeleton className="h-5 w-48" />
-                    </div>
-                </div>
-                <Skeleton className="h-11 w-full rounded-lg" />
-            </div>
-            <div>
-                <Skeleton className="h-7 w-32 mb-4" />
-                <div className="space-y-2">
-                    <div className="flex items-center gap-4 rounded-lg p-3 bg-muted/50">
-                        <Skeleton className="h-16 w-16 rounded-lg" />
-                        <div className="flex-1 space-y-2">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 rounded-lg p-3 bg-muted/50">
-                        <Skeleton className="h-16 w-16 rounded-lg" />
-                        <div className="flex-1 space-y-2">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
 
 export default function AccountPage() {
-  const { userProfile, loading: authLoading } = useAuth();
-  const [purchasedCourses, setPurchasedCourses] = useState<Course[]>([]);
-  const [coursesLoading, setCoursesLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPurchasedCourses = async () => {
-      if (!authLoading && userProfile && userProfile.purchasedCourses.length > 0) {
-        setCoursesLoading(true);
-        try {
-          const coursePromises = userProfile.purchasedCourses.map(id => getDoc(doc(db, 'courses', id)));
-          const courseDocs = await Promise.all(coursePromises);
-          const coursesData = courseDocs
-            .filter(docSnap => docSnap.exists())
-            .map(docSnap => ({ ...docSnap.data(), id: docSnap.id }) as Course);
-          setPurchasedCourses(coursesData);
-        } catch (error) {
-          console.error("Error fetching purchased courses:", error);
-        } finally {
-          setCoursesLoading(false);
-        }
-      } else {
-        setPurchasedCourses([]);
-        setCoursesLoading(false);
-      }
-    };
-
-    fetchPurchasedCourses();
-  }, [authLoading, userProfile]);
-
-  if (authLoading || coursesLoading) {
-    return <AccountPageSkeleton />;
-  }
+  const { userProfile } = useAuth();
 
   return (
-    <div className="grid gap-8">
-        <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-                <Avatar className="h-24 w-24">
-                    <AvatarImage src={userProfile?.photoURL || ''} alt={userProfile?.displayName || ''} />
-                    <AvatarFallback className="text-3xl">
-                        {getInitials(userProfile?.displayName)}
-                    </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                    <p className="font-headline text-2xl font-bold">{userProfile?.displayName}</p>
-                    <p className="text-base text-muted-foreground">{userProfile?.email}</p>
-                </div>
+    <div className="relative flex min-h-screen w-full flex-col bg-[var(--light-gray)] text-[var(--deep-indigo)]">
+      <div className="flex-grow pb-24">
+        <header className="sticky top-0 z-10 flex items-center justify-between bg-[var(--light-gray)]/80 p-4 backdrop-blur-sm">
+          <button
+            aria-label="Go back"
+            className="flex h-11 w-11 items-center justify-center rounded-full"
+          >
+            <span className="material-symbols-outlined text-3xl">
+              arrow_back_ios_new
+            </span>
+          </button>
+          <h1 className="font-headline text-2xl font-bold">Account</h1>
+          <button
+            aria-label="Settings"
+            className="flex h-11 w-11 items-center justify-center rounded-full"
+          >
+            <span className="material-symbols-outlined text-3xl">
+              settings
+            </span>
+          </button>
+        </header>
+        <main className="p-4">
+          <div className="mb-8 flex flex-col items-center">
+            <div className="relative mb-4">
+              <img
+                alt="User profile picture"
+                className="h-24 w-24 rounded-full border-4 border-white shadow-md"
+                src={userProfile?.photoURL || "https://lh3.googleusercontent.com/aida-public/AB6AXuBG4Km6DtdxHoSoFzBjwC91flrkYS3mU8G5EgphjHW26T9tR4XBDlaLICHB2LVhwXnL8iqFHzfqfU9ATPbZhfPiL-qeuk28wAk16UqhLgsbI_jeh-KicKfd9jJ8KzflAOC5us0DAIW2TvY3VRSlGhbKxYyFPfzVFNYD0cB22bHxue8OUlRdGIWpivxoel_5lYpYp9SkzI0142uMTtwQ7h8xqbW4pH7qojTigQXU2pYVNr3r3ueiwwA9BzGn8IZKB3TW7-FkEkTMiNs"}
+              />
+              <button
+                aria-label="Edit profile picture"
+                className="absolute bottom-0 right-0 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--muted-green)] text-white"
+              >
+                <span className="material-symbols-outlined text-xl">edit</span>
+              </button>
             </div>
-            <Button variant="secondary" className="w-full h-11 text-base font-bold">
-                Edit Profile
-            </Button>
-        </div>
-
-      <section>
-        <h2 className="text-xl font-headline font-bold mb-4">Course History</h2>
-        {purchasedCourses.length > 0 ? (
-          <div className="space-y-2">
-            {purchasedCourses.map((course) => {
-              if (!course) return null;
-              const image = PlaceHolderImages.find(img => img.id === course.imageId);
-              return (
-                <Link key={course.id} href={`/learn/${course.id}`} className="block">
-                    <div className="flex items-center gap-4 rounded-lg p-3 bg-secondary">
-                         {image && (
-                            <Image 
-                                src={image.imageUrl} 
-                                alt={course.title} 
-                                width={64}
-                                height={64}
-                                className="h-16 w-16 rounded-lg object-cover"
-                                data-ai-hint={image.imageHint}
-                            />
-                         )}
-                        <div className="flex-1">
-                            <p className="font-bold text-foreground">{course.title}</p>
-                            <p className="text-sm text-muted-foreground">{course.category}</p>
-                        </div>
+            <h2 className="font-headline text-2xl font-bold">{userProfile?.displayName || "Alex Morgan"}</h2>
+            <p className="text-[var(--muted-green)]">{userProfile?.email || "alex.morgan@email.com"}</p>
+          </div>
+          <div className="space-y-8">
+            <section>
+              <h3 className="font-headline text-xl font-bold text-[var(--deep-indigo)] mb-4">
+                Course History
+              </h3>
+              <div className="space-y-4">
+                <div className="glassmorphism flex items-center justify-between gap-4 p-4 rounded-2xl bg-white/60">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--deep-indigo)] text-white">
+                      <span className="material-symbols-outlined text-3xl">
+                        bar_chart
+                      </span>
                     </div>
-                </Link>
-              )
-            })}
+                    <div>
+                      <p className="font-bold text-[var(--deep-indigo)]">
+                        Intro to Stock Market
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Completed: 15/03/2024
+                      </p>
+                    </div>
+                  </div>
+                  <span className="material-symbols-outlined text-3xl text-[var(--muted-green)]">
+                    check_circle
+                  </span>
+                </div>
+                <div className="glassmorphism flex items-center justify-between gap-4 p-4 rounded-2xl bg-white/60">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--deep-indigo)] text-white">
+                      <span className="material-symbols-outlined text-3xl">
+                        real_estate_agent
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-bold text-[var(--deep-indigo)]">
+                        Real Estate 101
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        In Progress - 75%
+                      </p>
+                    </div>
+                  </div>
+                  <div className="h-2.5 w-16 rounded-full bg-gray-200">
+                    <div
+                      className="h-2.5 rounded-full bg-[var(--muted-green)]"
+                      style={{ width: "75%" }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        ) : (
-          <div className='text-center border-2 border-dashed border-muted-foreground/30 rounded-lg p-12 mt-4'>
-            <p className="text-muted-foreground mb-4">You haven't purchased any courses yet.</p>
-            <Button asChild>
-                <Link href="/courses">Browse Courses</Link>
-            </Button>
-          </div>
-        )}
-      </section>
+        </main>
+      </div>
+      <nav className="fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white/80 px-4 pb-3 pt-2 backdrop-blur-sm">
+        <div className="flex justify-around">
+          <Link
+            className="flex h-12 w-16 flex-col items-center justify-center gap-1 py-2 text-gray-500"
+            href="#"
+          >
+            <span className="material-symbols-outlined">home</span>
+            <span className="text-xs font-medium">Home</span>
+          </Link>
+          <Link
+            className="flex h-12 w-16 flex-col items-center justify-center gap-1 py-2 text-gray-500"
+            href="#"
+          >
+            <span className="material-symbols-outlined">school</span>
+            <span className="text-xs font-medium">Courses</span>
+          </Link>
+          <Link
+            className="flex h-12 w-16 flex-col items-center justify-center gap-1 rounded-xl bg-[var(--deep-indigo)]/10 py-2 text-[var(--deep-indigo)]"
+            href="#"
+          >
+            <span className="material-symbols-outlined">person</span>
+            <span className="text-xs font-bold">Account</span>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 }

@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import type { Course } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Shield, CreditCard, CheckCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface PurchaseModalProps {
@@ -84,12 +84,16 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
 
   const TriggerButton = () => (
     isAlreadyPurchased ? (
-        <Button asChild size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
-            <Link href={`/learn/${course.id}`}>Go to Course</Link>
+        <Button asChild size="lg" className="w-full font-bold text-lg gradient-success text-white interactive-glow rounded-full">
+            <Link href={`/learn/${course.id}`}>
+              <CheckCircle className="w-5 h-5 mr-2" />
+              Continue Learning
+            </Link>
         </Button>
     ) : (
-       <Button onClick={handleOpenTrigger} size="lg" className="w-full font-bold text-lg interactive-glow rounded-full">
-          Purchase Course - ${course.price}
+       <Button onClick={handleOpenTrigger} size="lg" className="w-full font-bold text-lg gradient-primary text-white interactive-glow rounded-full">
+          Get Instant Access - ${course.price}
+          <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
     )
   );
@@ -99,22 +103,58 @@ export function PurchaseModal({ course }: PurchaseModalProps) {
       <DialogTrigger asChild>
         <TriggerButton />
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Complete Your Purchase</DialogTitle>
-          <DialogDescription>
-              You're about to purchase "{course.title}" for ${course.price}.
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="text-center">
+          <DialogTitle className="text-2xl font-headline">Secure Your Access</DialogTitle>
+          <DialogDescription className="text-base">
+              Join thousands of students transforming their financial future
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4 text-center">
-            <p className="text-sm text-muted-foreground">
-                You will be redirected to our secure payment partner, IntaSend, to complete the transaction.
-            </p>
+        
+        <div className="py-6 space-y-6">
+          {/* Course Summary */}
+          <div className="bg-muted/30 rounded-xl p-4">
+            <h3 className="font-semibold mb-2">{course.title}</h3>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">One-time payment</span>
+              <span className="text-2xl font-bold text-gradient">${course.price}</span>
+            </div>
+          </div>
+
+          {/* Trust Signals */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 text-sm">
+              <Shield className="w-5 h-5 text-accent" />
+              <span>30-day money-back guarantee</span>
+            </div>
+            <div className="flex items-center gap-3 text-sm">
+              <CheckCircle className="w-5 h-5 text-accent" />
+              <span>Lifetime access to all materials</span>
+            </div>
+            <div className="flex items-center gap-3 text-sm">
+              <CreditCard className="w-5 h-5 text-accent" />
+              <span>Secure payment via IntaSend</span>
+            </div>
+          </div>
+
+          <div className="text-center text-sm text-muted-foreground bg-muted/20 rounded-lg p-3">
+            You'll be redirected to our secure payment partner to complete your purchase
+          </div>
         </div>
+
         <DialogFooter>
-          <Button onClick={handlePurchase} disabled={isLoading} className="w-full interactive-glow" size="lg">
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              {isLoading ? 'Redirecting...' : 'Proceed to Payment'}
+          <Button onClick={handlePurchase} disabled={isLoading} className="w-full gradient-primary text-white interactive-glow" size="lg">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Redirecting to Payment...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  Complete Purchase
+                </>
+              )}
           </Button>
         </DialogFooter>
       </DialogContent>

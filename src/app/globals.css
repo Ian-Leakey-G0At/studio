@@ -1,5 +1,4 @@
-
-@import url('https://api.fontshare.com/v2/css?f[]=space-grotesk@700&f[]=inter@400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,67 +6,69 @@
 
 @layer base {
   :root {
-    --background: 240 5% 96%; /* #F5F5F5 */
-    --foreground: 240 6% 10%; /* #1A1A1A */
+    --deep-indigo: #2c2a4a;
+    --light-gray: #f7f7f8;
+    --muted-green: #90a195;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 6% 10%;
+    --background: 240 8% 97%;
+    --foreground: 244 25% 23%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 6% 10%;
+    --card: 255 100% 100%;
+    --card-foreground: 244 25% 23%;
 
-    --primary: 231 48% 48%; /* #3F51B5 */
-    --primary-foreground: 0 0% 100%;
+    --popover: 255 100% 100%;
+    --popover-foreground: 244 25% 23%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 6% 10%;
+    --primary: 244 25% 23%;
+    --primary-foreground: 240 8% 97%;
 
+    --secondary: 145 9% 60%;
+    --secondary-foreground: 240 8% 97%;
+    
     --muted: 240 5% 90%;
-    --muted-foreground: 240 4% 46%;
+    --muted-foreground: 145 9% 60%;
 
-    --accent: 122 39% 49%; /* #4CAF50 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 145 9% 60%;
+    --accent-foreground: 255 100% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 231 48% 48%;
+    --ring: 244 25% 23%;
 
     --radius: 1rem;
   }
 
   .dark {
-    --background: 220 14% 7%; /* #101214 */
-    --foreground: 210 20% 98%; /* #f9fafb */
+    --background: 244 25% 23%;
+    --foreground: 240 8% 97%;
 
-    --card: 220 12% 10%; /* #171a1d */
-    --card-foreground: 210 20% 98%;
+    --card: 244 25% 23%;
+    --card-foreground: 240 8% 97%;
 
-    --popover: 220 14% 7%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 244 25% 23%;
+    --popover-foreground: 240 8% 97%;
 
-    --primary: 231 48% 48%; /* #3F51B5 */
-    --primary-foreground: 0 0% 100%;
+    --primary: 240 8% 97%;
+    --primary-foreground: 244 25% 23%;
 
-    --secondary: 220 12% 10%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 145 9% 60%;
+    --secondary-foreground: 240 8% 97%;
 
-    --muted: 220 12% 10%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 240 5% 90%;
+    --muted-foreground: 145 9% 60%;
 
-    --accent: 122 39% 49%; /* #4CAF50 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 145 9% 60%;
+    --accent-foreground: 255 100% 100%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 10% 15%;
-    --input: 220_10%_15%;
-    --ring: 231 48% 48%;
-
-    --radius: 1rem;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 240 8% 97%;
   }
 }
 
@@ -77,56 +78,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
     min-height: max(884px, 100dvh);
-    padding-top: env(safe-area-inset-top);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    padding-bottom: env(safe-area-inset-bottom);
   }
-  img, video {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold font-headline;
+  .font-headline {
+    font-family: 'Space Grotesk', sans-serif;
   }
 }
 
 @layer components {
-  /* Charcoalmorphism Glass Container */
-  .glass-container {
-    @apply bg-card/50 backdrop-blur-lg border;
-  }
-  
-  .charcoal-card {
-    @apply bg-card/80 backdrop-blur-2xl border;
-  }
-
-  /* Glow for interactive elements */
-  .interactive-glow {
-    @apply transition-shadow duration-300;
-  }
-  .interactive-glow:hover {
-    box-shadow: 0 0 20px 0px hsl(var(--primary) / 0.3);
-  }
-  .interactive-glow:focus-visible {
-     box-shadow: 0 0 25px 3px hsl(var(--primary) / 0.5);
-  }
-
-  /* Carousel specific styles from prototype */
-  .carousel-container {
-    display: flex;
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-  }
-  .carousel-slide {
-    flex: 0 0 100%;
-    transition: transform 1s ease-in-out;
-  }
-  .carousel-item {
-    width: 100%;
-    height: 100%;
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 }
